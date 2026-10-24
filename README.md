@@ -22,6 +22,8 @@ gcc wav.c -o sine -lm
 
 This creates `output.wav` in the current folder. On Windows, use MinGW/MSYS2 or WSL with the same commands.
 
+WARNING: before playing the file, lower the volume, it has not been modified and it can be very high.
+
 Output check: the file should be **441,044 bytes** (44 header + 441,000 audio data).
 
 ## How it works
