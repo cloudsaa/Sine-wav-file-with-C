@@ -63,10 +63,23 @@ The RIFF size is `36 + data size`: the 36 comes from everything in the header af
 
 ## What I learned
 
-- What a sample rate is, and how sample number maps to time
-- How audio is stored as plain numbers, and how a binary file format is laid out
-- Using `uint16_t`/`uint32_t` structs to match a file format byte for byte
-- Why the loop must be written in floating point: integer division would break the math
+- **How digital audio represents sound:** Audio can be represented as a sequence of numerical samples, each describing the amplitude of a waveform at a particular instant. In this project, I generate those values mathematically using a sine function rather than recording an existing sound.
+
+- **What the sample rate means:** The sample rate determines how many samples are generated per second. With a sample rate of 44,100 Hz, each sample corresponds to a time interval of approximately 1/44,100 of a second.
+
+- **How a mathematical function becomes audio data:** I use a sine function to generate a 440 Hz tone. Each iteration of the loop calculates the waveform's amplitude at a particular sample index, scales it to fit within a 16-bit integer's range, and rounds it to an integer.
+
+- **How binary files store numbers:** The audio samples are stored as binary values rather than as human-readable text. Using `fwrite()`, I write the contents of the sample buffer directly to the WAV file.
+
+- **How the WAV/RIFF file format is structured:** A WAV file uses the RIFF container format. Its header contains identifiers such as `RIFF` and `WAVE`, followed by metadata chunks such as `fmt ` and `data`. These fields tell audio software how to interpret the bytes that follow.
+
+- **How C structures represent file-format fields:** I use nested structures to organise the RIFF header, format chunk, and data header. Fixed-width integer types such as `uint16_t` and `uint32_t` help represent fields with specific bit widths, while `sizeof()` calculates the sizes of types and objects.
+
+- **How file sizes are calculated:** The RIFF size field counts the bytes following the first eight bytes of the file. For this standard PCM layout, the header contributes 36 bytes to that count, and the audio data contributes `NSAMPLES * sizeof(sample_t)` bytes.
+
+- **Why floating-point arithmetic matters:** The sine function requires floating-point calculations. Using floating-point arithmetic preserves the fractional values needed to calculate the waveform accurately; integer division at the wrong point would discard those fractions and distort the result.
+
+- **How digital data becomes physical sound:** The WAV file contains the digital representation of the waveform, not sound itself. An audio player interprets the samples and sends them through an audio system, where a digital-to-analog converter and speaker can turn them into physical vibrations.
 
 ## Known limitations / next steps
 
